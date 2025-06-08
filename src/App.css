@@ -1,20 +1,23 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background: linear-gradient(#1e3c72, #2a5298);
+  background: #222;
 }
 
 .container {
   text-align: center;
   padding: 20px;
   color: white;
+  width: 100%;
   max-width: 420px;
+  min-height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
   justify-content: center;
+  box-sizing: border-box;
+  background: linear-gradient(#1b2450, #7f9ccb);
 }
 
 canvas {
@@ -23,11 +26,19 @@ canvas {
   background: transparent;
   cursor: crosshair;
   width: 100%;
-  max-width: 380px;
+  max-width: 320px;
   height: auto;
+  aspect-ratio: 1;
   touch-action: none;
-  padding: 20px; /* 여백 추가 */
+  padding: 10px;
   box-sizing: border-box;
+}
+
+.success-text,
+.message-text {
+  white-space: pre-line;
+  line-height: 1.4;
+  word-break: keep-all;
 }
 
 .success-text {
@@ -35,6 +46,56 @@ canvas {
   font-weight: bold;
   color: #ffffaa;
   animation: glow 1s ease-in-out infinite alternate;
+}
+
+.message-area {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #ccd;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.event-button {
+  margin-top: 24px;
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #162b50;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 20px;
+  box-shadow: 
+    0 2px 4px rgba(22, 43, 80, 0.1),
+    0 4px 16px rgba(127, 156, 203, 0.2),
+    0 8px 12px rgba(22, 43, 80, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.event-button:hover {
+  transform: translateY(-2px);
+  background: white;
+  box-shadow: 
+    0 4px 8px rgba(22, 43, 80, 0.15),
+    0 8px 24px rgba(127, 156, 203, 0.3),
+    0 12px 16px rgba(22, 43, 80, 0.15),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.event-button:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 2px rgba(22, 43, 80, 0.1),
+    0 2px 8px rgba(127, 156, 203, 0.2),
+    0 4px 8px rgba(22, 43, 80, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
 }
 
 @keyframes glow {
@@ -48,7 +109,8 @@ canvas {
 
 @media (min-width: 1024px) {
   .container {
-    padding-top: 50px;
+    min-height: 100vh;
+    padding: 30px 20px;
   }
 
   canvas {
@@ -62,11 +124,22 @@ canvas {
 
 @media (max-width: 480px) {
   .container {
-    padding: 15px;
+    padding: 20px 10px;
   }
-  
+
   canvas {
-    max-width: 340px;
-    padding: 15px;
+    max-width: 300px;
+    padding: 5px;
+  }
+
+  .message-area {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    padding-left: 5px;
+  }
+
+  .event-button {
+    padding: 14px 32px;
+    font-size: 1rem;
   }
 }

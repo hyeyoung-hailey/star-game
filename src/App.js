@@ -17,9 +17,9 @@ function App() {
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
   const [success, setSuccess] = useState(false);
 
-  const STAR_RADIUS_OUTER = 100;  // Outer points distance from center
-  const STAR_RADIUS_INNER = 40;   // Inner points distance from center
-  const LABEL_DISTANCE = 25;      // Distance of labels from points
+  const STAR_RADIUS_OUTER = 115;  // 100에서 115로 증가 (15% 증가)
+  const STAR_RADIUS_INNER = 46;   // 40에서 46으로 증가 (15% 증가)
+  const LABEL_DISTANCE = 30;      // 25에서 30으로 증가 (라벨 위치 조정)
 
   const ROTATION_ANGLE = 45; // 별 전체 회전 각도 (도)
 
@@ -45,21 +45,6 @@ function App() {
     };
   };
 
-  const isNear = (x, y, pt) => Math.hypot(pt.x - x, pt.y - y) <= 15; // 거리 계산 정확도 개선
-
-  const isCyclicEqual = (ref, input) => {
-    const refCore = ref.slice(0, -1);
-    const inputCore = input.slice(0, -1);
-    if (refCore.length !== inputCore.length) return false;
-
-    const len = refCore.length;
-    for (let i = 0; i < len; i++) {
-      const rotated = [...refCore.slice(i), ...refCore.slice(0, i)];
-      if (rotated.join() === inputCore.join()) return true;
-    }
-    return false;
-  };
-
   // 수정된 좌표 변환 함수 추가
   const getCanvasCoordinates = (e) => {
     const canvas = canvasRef.current;
@@ -76,6 +61,21 @@ function App() {
       y = (e.clientY - rect.top) * scaleY;
     }
     return { x, y };
+  };
+
+  const isNear = (x, y, pt) => Math.hypot(pt.x - x, pt.y - y) <= 15;
+
+  const isCyclicEqual = (ref, input) => {
+    const refCore = ref.slice(0, -1);
+    const inputCore = input.slice(0, -1);
+    if (refCore.length !== inputCore.length) return false;
+
+    const len = refCore.length;
+    for (let i = 0; i < len; i++) {
+      const rotated = [...refCore.slice(i), ...refCore.slice(0, i)];
+      if (rotated.join() === inputCore.join()) return true;
+    }
+    return false;
   };
 
   const handleMouseDown = (e) => {
@@ -173,7 +173,7 @@ function App() {
       ctx.lineTo(points[guide[i]].x, points[guide[i]].y);
     }
     ctx.strokeStyle = '#888';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 4;  // 점선 두께 증가
     ctx.stroke();
 
     // 성공한 별
@@ -240,6 +240,10 @@ function App() {
 
   return (
     <div className="container">
+      <div className="message-area">
+        점선을 따라 별을 그려보세요!<br/>
+        순서대로 연결하면 완성됩니다.
+      </div>
       <canvas
         ref={canvasRef}
         width={CANVAS_WIDTH}
@@ -252,16 +256,23 @@ function App() {
         onTouchEnd={handleMouseUp}
         style={{
           width: '100%',
-          maxWidth: '380px', // 최대 너비 증가
+          maxWidth: '320px',
           height: 'auto',
-          touchAction: 'none', // 모바일에서 스크롤 방지
+          touchAction: 'none',
+          cursor: 'crosshair'
         }}
       />
-      <p className={success ? 'success-text' : ''}>
+      <p className={success ? 'success-text' : 'message-text'}>
         {success
           ? '🌟 성공! 별을 정확히 그렸습니다!'
-          : '점선을 따라 별을 그려보세요!'}
+          : '나만의 별 그리는 방법을 공유하고\n제품 추천과 랜덤 리워드까지 받아가자!'}
       </p>
+      <button 
+        className="event-button"
+        onClick={() => window.location.href="/event"}
+      >
+        게임 참여하고 선물받기
+      </button>
     </div>
   );
 }
