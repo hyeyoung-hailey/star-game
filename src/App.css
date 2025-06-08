@@ -6,8 +6,15 @@ body {
 
 .container {
   text-align: center;
-  padding-top: 30px;
+  padding: 20px;
   color: white;
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  justify-content: center;
 }
 
 canvas {
@@ -15,6 +22,12 @@ canvas {
   margin: 0 auto;
   background: transparent;
   cursor: crosshair;
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  touch-action: none;
+  padding: 20px; /* 여백 추가 */
+  box-sizing: border-box;
 }
 
 .success-text {
@@ -30,5 +43,30 @@ canvas {
   }
   to {
     text-shadow: 0 0 10px gold, 0 0 20px gold;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-top: 50px;
+  }
+
+  canvas {
+    max-width: 320px;
+  }
+
+  .success-text {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+  
+  canvas {
+    max-width: 340px;
+    padding: 15px;
   }
 }
