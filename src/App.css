@@ -1,3 +1,18 @@
+/* 왼쪽 상단 로고 이미지 스타일 */
+.logo-top-left {
+  position: fixed;
+  top: -24px;
+  left: 8px;
+  width: min(32vw, 160px);
+  max-width: 160px;
+  min-width: 80px;
+  height: auto;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.85;
+}
+
 body {
   margin: 0;
   font-family: sans-serif;
@@ -104,6 +119,17 @@ canvas {
   }
   to {
     text-shadow: 0 0 10px gold, 0 0 20px gold;
+  }
+}
+
+/* 데스크탑에서 컨테이너 왼쪽에 맞추고, 위쪽 여백 최소화 */
+@media (min-width: 900px) {
+  .logo-top-left {
+    left: calc(50% - 206px);
+    top: -24px;
+    width: 160px;
+    min-width: 0;
+    max-width: 160px;
   }
 }
 

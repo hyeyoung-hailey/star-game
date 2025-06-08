@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './App.css';
-import confetti from 'canvas-confetti';
 
 function App() {
   const canvasRef = useRef(null);
@@ -144,17 +143,6 @@ function App() {
   };
 
   useEffect(() => {
-    if (success) {
-      confetti({
-        particleCount: 100,
-        spread: 80,
-        origin: { y: 0.3 },
-        colors: ['#ffffff', '#ffff66', '#ffd700'],
-      });
-    }
-  }, [success]);
-
-  useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
@@ -239,41 +227,48 @@ function App() {
   }, [drawPoints, selectedVertices, hoverVertex, success]);
 
   return (
-    <div className="container">
-      <div className="message-area">
-        점선을 따라 별을 그려보세요!<br/>
-        순서대로 연결하면 완성됩니다.
-      </div>
-      <canvas
-        ref={canvasRef}
-        width={CANVAS_WIDTH}
-        height={CANVAS_HEIGHT}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchStart={handleMouseDown}
-        onTouchMove={handleMouseMove}
-        onTouchEnd={handleMouseUp}
-        style={{
-          width: '100%',
-          maxWidth: '320px',
-          height: 'auto',
-          touchAction: 'none',
-          cursor: 'crosshair'
-        }}
+    <>
+      <img
+        src="./logo-img.png" // public/logo.png에 파일이 있어야 합니다.
+        alt="Logo"
+        className="logo-top-left"
       />
-      <p className={success ? 'success-text' : 'message-text'}>
-        {success
-          ? '🌟 성공! 별을 정확히 그렸습니다!'
-          : '나만의 별 그리는 방법을 공유하고\n제품 추천과 랜덤 리워드까지 받아가자!'}
-      </p>
-      <button 
-        className="event-button"
-        onClick={() => window.location.href="/event"}
-      >
-        게임 참여하고 선물받기
-      </button>
-    </div>
+      <div className="container">
+        <div className="message-area">
+          점선을 따라 별을 그려보세요!<br/>
+          순서대로 연결하면 완성됩니다.
+        </div>
+        <canvas
+          ref={canvasRef}
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchMove={handleMouseMove}
+          onTouchEnd={handleMouseUp}
+          style={{
+            width: '100%',
+            maxWidth: '320px',
+            height: 'auto',
+            touchAction: 'none',
+            cursor: 'crosshair'
+          }}
+        />
+        <p className={success ? 'success-text' : 'message-text'}>
+          {success
+            ? '🌟 성공! 별을 정확히 그렸습니다!'
+            : '나만의 별 그리는 방법을 공유하고\n제품 추천과 랜덤 리워드까지 받아가자!'}
+        </p>
+        <button 
+          className="event-button"
+          onClick={() => window.location.href="/event"}
+        >
+          게임 참여하고 선물받기
+        </button>
+      </div>
+    </>
   );
 }
 
