@@ -32,7 +32,7 @@ body {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  background: linear-gradient(#1b2450, #7f9ccb);
+  background: linear-gradient(#1b2450aa, #7f9ccbaa);
 }
 
 canvas {
@@ -85,7 +85,7 @@ canvas {
   border-radius: 20px;
   box-shadow: 
     0 2px 4px rgba(22, 43, 80, 0.1),
-    0 4px 16px rgba(127, 156, 203, 0.2),
+    0 4px 16px rgba(146, 178, 230, 0.2),
     0 8px 12px rgba(22, 43, 80, 0.1),
     inset 0 2px 4px rgba(255, 255, 255, 0.8);
   cursor: pointer;
@@ -111,6 +111,21 @@ canvas {
     0 2px 8px rgba(127, 156, 203, 0.2),
     0 4px 8px rgba(22, 43, 80, 0.1),
     inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.fadein-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  animation: fadein-bg-anim 1.2s ease forwards;
+  transition: opacity 1.2s ease;
+}
+
+@keyframes fadein-bg-anim {
+  from { opacity: 0; }
+  to { opacity: 0.95; }
 }
 
 @keyframes glow {

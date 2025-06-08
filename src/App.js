@@ -15,6 +15,9 @@ function App() {
   const [hoverVertex, setHoverVertex] = useState(null);
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
   const [success, setSuccess] = useState(false);
+  const [eventActive, setEventActive] = useState(false);
+  const [showBg, setShowBg] = useState(false); // 별 완성 시 배경 이미지 페이드인용 state
+  const [hasStarted, setHasStarted] = useState(false);  // 게임 시작 여부 추가
 
   const STAR_RADIUS_OUTER = 115;  // 100에서 115로 증가 (15% 증가)
   const STAR_RADIUS_INNER = 46;   // 40에서 46으로 증가 (15% 증가)
@@ -77,13 +80,23 @@ function App() {
     return false;
   };
 
+  const resetGame = () => {
+    setDrawPoints([]);
+    setSelectedVertices([]);
+    setIsDrawing(false);
+    setHoverVertex(null);
+    setSuccess(false);
+    setShowBg(false);
+    // hasStarted는 리셋하지 않음
+  };
+
   const handleMouseDown = (e) => {
     e.preventDefault();
     const { x, y } = getCanvasCoordinates(e);
     
     for (let i = 0; i < points.length; i++) {
       if (isNear(x, y, points[i])) {
-        setDrawPoints([points[i]]); // 정확한 점 좌표 사용
+        setDrawPoints([points[i]]);
         setSelectedVertices([i]);
         setHoverVertex(i);
         setIsDrawing(true);
@@ -139,11 +152,13 @@ function App() {
 
     if (isCorrect) {
       setSuccess(true);
+      setShowBg(true); // 별 완성 시 배경 이미지 표시
     }
   };
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
     // 캔버스 비율 계산
@@ -215,25 +230,42 @@ function App() {
       ctx.fillStyle = selectedVertices.includes(i) ? 'deepskyblue' : 'white';
       ctx.fill();
 
-      // 라벨 그리기
-      const { dx, dy } = calculateLabelPosition(x, y, angle);
-      const fontSize = Math.round(Math.max(14 * scale, 12));
-      ctx.font = `bold ${fontSize}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
-      ctx.fillText(labels[i], x + dx, y + dy);
+      // 라벨은 eventActive가 true일 때만 그리기
+      if (eventActive) {
+        const { dx, dy } = calculateLabelPosition(x, y, angle);
+        const fontSize = Math.round(Math.max(14 * scale, 12));
+        ctx.font = `bold ${fontSize}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'white';
+        ctx.fillText(labels[i], x + dx, y + dy);
+      }
     });
-  }, [drawPoints, selectedVertices, hoverVertex, success]);
+  }, [drawPoints, selectedVertices, hoverVertex, success, eventActive]); // eventActive 의존성 추가
+
+  const bgImageUrl = '/swimsuit.jpg';  // public 폴더 기준 절대 경로
 
   return (
     <>
+      {showBg && (
+        <div 
+          className="fadein-bg" 
+          style={{
+            backgroundImage: `linear-gradient(rgba(34, 34, 34, 0.5), rgba(34, 34, 34, 0.5)), url(${process.env.PUBLIC_URL}/swimsuit.jpg)`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            zIndex: 1
+          }}
+        />
+      )}
       <img
-        src="./logo-img.png" // public/logo.png에 파일이 있어야 합니다.
+        src="./logo-img.png"
         alt="Logo"
         className="logo-top-left"
+        style={{ zIndex: 30 }}
       />
-      <div className="container">
+      <div className="container" style={{ position: 'relative', zIndex: 20 }}>
+        {/* 별 상단 안내 메시지 영역은 항상 별 위에 표시 */}
         <div className="message-area">
           점선을 따라 별을 그려보세요!<br/>
           순서대로 연결하면 완성됩니다.
@@ -261,15 +293,30 @@ function App() {
             ? '🌟 성공! 별을 정확히 그렸습니다!'
             : '나만의 별 그리는 방법을 공유하고\n제품 추천과 랜덤 리워드까지 받아가자!'}
         </p>
-        <button 
-          className="event-button"
-          onClick={() => window.location.href="/event"}
-        >
-          게임 참여하고 선물받기
-        </button>
+        {!eventActive ? (
+          <button
+            className="event-button"
+            style={{ marginTop: '16px' }}
+            onClick={() => {
+              setEventActive(true);
+              setHasStarted(true); // 게임 시작 시 hasStarted를 true로 설정
+            }}
+          >
+            게임 참여하고 선물받기
+          </button>
+        ) : !success ? (
+          <button
+            className="event-button"
+            style={{ marginTop: '16px' }}
+            onClick={resetGame}
+          >
+            다시 하기
+          </button>
+        ) : null}
       </div>
     </>
   );
 }
 
 export default App;
+
